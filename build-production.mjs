@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 const archive=fs.readFileSync('website-source.zip');
-if(crypto.createHash('sha256').update(archive).digest('hex')!=='179970be54dc88d4827376539d1a394ffa244527908306c69aae3dcb3336f74b')throw new Error('Source archive checksum mismatch');
+if(crypto.createHash('sha256').update(archive).digest('hex')!=='a595e94383229bcace56e1dc87b4396aa7677187a1c52486d33c760c1335020d')throw new Error('Source archive checksum mismatch');
 let end=-1;
 for(let i=archive.length-22;i>=Math.max(0,archive.length-65557);i--){if(archive.readUInt32LE(i)===0x06054b50){end=i;break;}}
 if(end<0)throw new Error('ZIP directory missing');
