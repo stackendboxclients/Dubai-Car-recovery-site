@@ -1,0 +1,8 @@
+{
+  "name": "dubai-car-recovery-site",
+  "private": true,
+  "version": "3.0.0",
+  "scripts": {
+    "build": "node build-production.mjs"
+  }
+}
