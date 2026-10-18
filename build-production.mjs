@@ -28,7 +28,7 @@ for(let i=0;i<count;i++){
 console.log(`Extracted ${written} verified files from ${file}`);
 }
 extractArchive('website-source.zip','924ec363b79c4a1f49a4da8f859b8cc0a30538c54607e352ddb8a7574e4c081c');
-extractArchive('about-update.zip','0e67a3cb6d4c8010cb18f3ecb9f44c907d419d1aed03393d89218cade45f5120');
+extractArchive('about-update.zip','4c6c68791e02abfef33564a6b371fbe741562cf01d734d6cebebcf35d53393e4');
 // The production assets are already present in dist. Restore this shared image
 // directory for anyone rebuilding the published source archive after download.
 fs.cpSync('dist/media/recovery','source/assets/recovery',{recursive:true});
