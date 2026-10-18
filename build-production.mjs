@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 const archive=fs.readFileSync('website-source.zip');
-if(crypto.createHash('sha256').update(archive).digest('hex')!=='98296d53224c0ddff726954058e4fe0bbd21aa6fb142e1749d8285e85fdbe68b')throw new Error('Source archive checksum mismatch');
+if(crypto.createHash('sha256').update(archive).digest('hex')!=='37c3a39abfa89fe81ddbcf16f256baa3aa60e0d8a871e481af4aec4556bca877')throw new Error('Source archive checksum mismatch');
 let end=-1;
 for(let i=archive.length-22;i>=Math.max(0,archive.length-65557);i--){if(archive.readUInt32LE(i)===0x06054b50){end=i;break;}}
 if(end<0)throw new Error('ZIP directory missing');
@@ -25,4 +25,7 @@ for(let i=0;i<count;i++){
  fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,decoded);written++;
 }
 console.log(`Extracted ${written} verified production/source files`);
+// The production assets are already present in dist. Restore this shared image
+// directory for anyone rebuilding the published source archive after download.
+fs.cpSync('dist/media/recovery','source/assets/recovery',{recursive:true});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
