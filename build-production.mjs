@@ -3,8 +3,9 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import {execFileSync} from 'node:child_process';
-const archive=fs.readFileSync('website-source.zip');
-if(crypto.createHash('sha256').update(archive).digest('hex')!=='924ec363b79c4a1f49a4da8f859b8cc0a30538c54607e352ddb8a7574e4c081c')throw new Error('Source archive checksum mismatch');
+function extractArchive(file,expectedHash){
+const archive=fs.readFileSync(file);
+if(crypto.createHash('sha256').update(archive).digest('hex')!==expectedHash)throw new Error(`${file} checksum mismatch`);
 let end=-1;
 for(let i=archive.length-22;i>=Math.max(0,archive.length-65557);i--){if(archive.readUInt32LE(i)===0x06054b50){end=i;break;}}
 if(end<0)throw new Error('ZIP directory missing');
@@ -24,7 +25,10 @@ for(let i=0;i<count;i++){
  if(!decoded||decoded.length!==decodedSize)throw new Error('ZIP extraction failed');
  fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,decoded);written++;
 }
-console.log(`Extracted ${written} verified production/source files`);
+console.log(`Extracted ${written} verified files from ${file}`);
+}
+extractArchive('website-source.zip','924ec363b79c4a1f49a4da8f859b8cc0a30538c54607e352ddb8a7574e4c081c');
+extractArchive('about-update.zip','0e67a3cb6d4c8010cb18f3ecb9f44c907d419d1aed03393d89218cade45f5120');
 // The production assets are already present in dist. Restore this shared image
 // directory for anyone rebuilding the published source archive after download.
 fs.cpSync('dist/media/recovery','source/assets/recovery',{recursive:true});
