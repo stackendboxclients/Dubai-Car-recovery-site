@@ -30,6 +30,23 @@ console.log(`Extracted ${written} verified files from ${file}`);
 extractArchive('website-source.zip','924ec363b79c4a1f49a4da8f859b8cc0a30538c54607e352ddb8a7574e4c081c');
 extractArchive('about-update.zip','4c6c68791e02abfef33564a6b371fbe741562cf01d734d6cebebcf35d53393e4');
 extractArchive('favicon-update.zip','6e320e4fe15b05080c38aa7ba228aa1c875d09caed1ea1163ae3246ea79d59bb');
+extractArchive('circle-favicon-assets.zip','f9353ef51983bc67240840de8cd802e0dce91feb7387ab2b02dfddeaf32551c5');
+for(const name of ['favicon.png','favicon-32.png','favicon.ico','apple-touch-icon.png','app-icon-192.png','app-icon-512.png','site.webmanifest']){
+ fs.copyFileSync(path.join('source/assets',name),path.join('dist',name));
+}
+function updateFaviconVersion(dir){
+ for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+  const file=path.join(dir,entry.name);
+  if(entry.isDirectory()){updateFaviconVersion(file);continue;}
+  if(!entry.name.endsWith('.html'))continue;
+  const html=fs.readFileSync(file,'utf8');
+  const updated=html.replaceAll('red-logo-1','circle-logo-3');
+  if(updated===html)continue;
+  fs.writeFileSync(file,updated);
+  if(fs.existsSync(file+'.gz'))fs.writeFileSync(file+'.gz',zlib.gzipSync(updated));
+ }
+}
+updateFaviconVersion('dist');
 // The production assets are already present in dist. Restore this shared image
 // directory for anyone rebuilding the published source archive after download.
 fs.cpSync('dist/media/recovery','source/assets/recovery',{recursive:true});
