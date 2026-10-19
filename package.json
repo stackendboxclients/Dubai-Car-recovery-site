@@ -3,6 +3,12 @@
   "private": true,
   "version": "3.0.0",
   "scripts": {
-    "build": "node build-production.mjs"
+    "build": "node build-production.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check api/reviews.js && node --check api/review-config.js && node --check api/admin-reviews.js && node --check reviews/client/reviews.js && node --check reviews/server/core.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "@vercel/blob": "^2.8.2"
   }
 }
