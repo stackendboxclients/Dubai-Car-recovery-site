@@ -51,3 +51,5 @@ updateFaviconVersion('dist');
 // directory for anyone rebuilding the published source archive after download.
 fs.cpSync('dist/media/recovery','source/assets/recovery',{recursive:true});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/build-reviews.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});

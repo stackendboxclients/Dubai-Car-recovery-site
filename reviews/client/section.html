@@ -1,0 +1,18 @@
+<section class="human-reviews section" id="share-your-experience" aria-labelledby="human-write-title">
+ <div class="wrap human-reviews-inner">
+  <div class="human-review-panel">
+   <div class="human-review-intro"><span class="human-review-mark" aria-hidden="true">✎</span><h3 id="human-write-title">Write a Review</h3><p>Every experience matters.<br>Tell us what went well, or what we can do better.</p><div class="human-review-note"><strong>Honest feedback, thoughtfully shared.</strong><p>All ratings are welcome. Reviews are checked for spam and abuse before publication.</p></div></div>
+   <form class="human-review-form" id="human-review-form" novalidate>
+    <div class="human-review-fields">
+     <div class="human-review-field"><label for="human-review-name">Customer name <span aria-hidden="true">*</span></label><input id="human-review-name" name="name" autocomplete="name" required minlength="2" maxlength="80" placeholder="Your display name" aria-describedby="human-name-help human-name-error"><small id="human-name-help">This name will appear with your review.</small><span class="human-field-error" id="human-name-error"></span></div>
+     <fieldset class="human-review-field human-rating-field" aria-describedby="human-rating-error"><legend>Your rating <span aria-hidden="true">*</span></legend><div class="human-rating-stars">__RATING_INPUTS__</div><span class="human-rating-value" id="human-rating-value" aria-live="polite">Choose 1–5 stars</span><span class="human-field-error" id="human-rating-error"></span></fieldset>
+     <div class="human-review-field human-review-wide"><label for="human-review-text">Your experience <span aria-hidden="true">*</span></label><textarea id="human-review-text" name="text" rows="5" required minlength="10" maxlength="3000" placeholder="How was your experience with our team?" aria-describedby="human-text-help human-text-error"></textarea><small id="human-text-help">10–3,000 characters. Please leave out phone numbers, addresses and other private details.</small><span class="human-field-error" id="human-text-error"></span></div>
+    </div>
+    <div class="human-honeypot" aria-hidden="true" inert><label for="human-review-website">Leave this field empty</label><input id="human-review-website" name="website" tabindex="-1" autocomplete="off"></div>
+    <div id="human-security-check"></div>
+    <div class="human-review-actions"><button class="btn human-review-submit" type="submit" disabled>Submit Review <span aria-hidden="true">↗</span></button><p class="human-review-status" id="human-review-status" role="status" aria-live="polite">Preparing the review form…</p></div>
+    <noscript><p>Please enable JavaScript to submit a review and load customer feedback.</p></noscript>
+   </form>
+  </div>
+ </div>
+</section>
