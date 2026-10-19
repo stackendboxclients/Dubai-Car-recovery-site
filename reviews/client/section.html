@@ -1,27 +1,18 @@
-<section class="human-reviews section" id="share-your-experience" aria-labelledby="human-reviews-title">
+<section class="human-reviews section" id="share-your-experience" aria-labelledby="human-write-title">
  <div class="wrap human-reviews-inner">
-  <div class="human-reviews-heading">
-   <p class="eyebrow red">YOUR JOURNEY. YOUR WORDS.</p>
-   <h2 id="human-reviews-title">Share Your Experience</h2>
-   <p>Used our recovery or towing service? Tell us about your experience. Your feedback helps us improve and helps other customers make informed decisions.</p>
-  </div>
   <div class="human-review-panel">
-   <div class="human-review-intro"><span class="human-review-mark" aria-hidden="true">✎</span><h3>Write a Review</h3><p>Every experience matters.<br>Tell us what went well, or what we can do better.</p><div class="human-review-note"><strong>Honest feedback, thoughtfully shared.</strong><p>All ratings are welcome. Reviews are checked for spam and abuse before publication.</p></div></div>
+   <div class="human-review-intro"><span class="human-review-mark" aria-hidden="true">✎</span><h3 id="human-write-title">Write a Review</h3><p>Every experience matters.<br>Tell us what went well, or what we can do better.</p><div class="human-review-note"><strong>Honest feedback, thoughtfully shared.</strong><p>All ratings are welcome. Reviews are checked for spam and abuse before publication.</p></div></div>
    <form class="human-review-form" id="human-review-form" novalidate>
     <div class="human-review-fields">
      <div class="human-review-field"><label for="human-review-name">Customer name <span aria-hidden="true">*</span></label><input id="human-review-name" name="name" autocomplete="name" required minlength="2" maxlength="80" placeholder="Your display name" aria-describedby="human-name-help human-name-error"><small id="human-name-help">This name will appear with your review.</small><span class="human-field-error" id="human-name-error"></span></div>
      <fieldset class="human-review-field human-rating-field" aria-describedby="human-rating-error"><legend>Your rating <span aria-hidden="true">*</span></legend><div class="human-rating-stars">__RATING_INPUTS__</div><span class="human-rating-value" id="human-rating-value" aria-live="polite">Choose 1–5 stars</span><span class="human-field-error" id="human-rating-error"></span></fieldset>
      <div class="human-review-field human-review-wide"><label for="human-review-text">Your experience <span aria-hidden="true">*</span></label><textarea id="human-review-text" name="text" rows="5" required minlength="10" maxlength="3000" placeholder="How was your experience with our team?" aria-describedby="human-text-help human-text-error"></textarea><small id="human-text-help">10–3,000 characters. Please leave out phone numbers, addresses and other private details.</small><span class="human-field-error" id="human-text-error"></span></div>
-     <div class="human-review-field"><label for="human-review-service">Service used <span class="human-optional">(optional)</span></label><select id="human-review-service" name="service" aria-describedby="human-service-error"><option value="">Choose your service</option>__SERVICE_OPTIONS__</select><span class="human-field-error" id="human-service-error"></span></div>
-     <div class="human-review-field"><label for="human-review-email">Email address <span class="human-optional">(optional)</span></label><input id="human-review-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" aria-describedby="human-email-help human-email-error"><small id="human-email-help">Never displayed publicly.</small><span class="human-field-error" id="human-email-error"></span></div>
     </div>
     <div class="human-honeypot" aria-hidden="true" inert><label for="human-review-website">Leave this field empty</label><input id="human-review-website" name="website" tabindex="-1" autocomplete="off"></div>
     <div id="human-security-check"></div>
-    <p class="human-review-privacy">Your name, rating, review, date and selected service may be published after approval. Email stays private. <a href="/privacy/#customer-review-privacy">Review privacy</a></p>
     <div class="human-review-actions"><button class="btn human-review-submit" type="submit" disabled>Submit Review <span aria-hidden="true">↗</span></button><p class="human-review-status" id="human-review-status" role="status" aria-live="polite">Preparing the review form…</p></div>
     <noscript><p>Please enable JavaScript to submit a review and load customer feedback.</p></noscript>
    </form>
   </div>
-  <div class="human-published" aria-labelledby="human-published-title"><div class="human-published-heading"><div><p class="eyebrow red">COMMUNITY FEEDBACK</p><h2 id="human-published-title">Reviews From Our Customers</h2></div><p>Customer submissions, published after moderation.</p></div><div id="human-review-list" class="human-review-list" aria-busy="true"><p class="human-review-empty" role="status">Loading customer reviews…</p></div><p class="human-load-status" id="human-load-status" role="status" aria-live="polite"></p><button class="btn human-load-more" id="human-load-more" type="button" hidden>Load More Reviews</button></div>
  </div>
 </section>
