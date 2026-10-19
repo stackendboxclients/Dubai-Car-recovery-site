@@ -3,7 +3,7 @@
   "framework": null,
   "buildCommand": "node build-production.mjs",
   "outputDirectory": "dist",
-  "installCommand": "",
+  "installCommand": "npm ci --omit=dev",
   "trailingSlash": true,
   "headers": [
     {
@@ -33,5 +33,16 @@
         }
       ]
     }
-  ]
+  ],
+  "crons": [
+    {
+      "path": "/api/review-cleanup",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  }
 }
