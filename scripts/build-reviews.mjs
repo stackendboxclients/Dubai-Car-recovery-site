@@ -13,7 +13,7 @@ const baseline=fs.readFileSync('dist/index.html','utf8');
 const original=baseline.match(/<section class="section reviews-section"[\s\S]*?<\/section>/)?.[0];
 assert(original,'Existing animated review section must exist.');
 assert(!baseline.includes('id="share-your-experience"'),'Feature already injected: run the full build first.');
-const compact=original.replace(/<a class="btn whatsapp review-cta"[\s\S]*?<\/a>/,'').replace('aria-label="4.5 out of 5 rating"','aria-label="Decorative animated stars"').replace('role="img" aria-label="Four full gold stars and one half gold star"','aria-hidden="true"').replace('4.5 Rating','Example reviews').replace('Reviews supplied by the business for publication. Dates are shown exactly as provided.','Example reviews supplied by the business. These are not verified customer submissions.');
+const compact=original.replace(/<a class="btn whatsapp review-cta"[\s\S]*?<\/a>/,'').replace('aria-label="4.5 out of 5 rating"','aria-label="Illustrative 4.5 rating for example reviews"').replace('role="img" aria-label="Four full gold stars and one half gold star"','aria-hidden="true"').replace('Reviews supplied by the business for publication. Dates are shown exactly as provided.','Example reviews and illustrative rating supplied by the business. Customer submissions appear after approval.');
 assert(compact.includes('customer-review-stage')&&!compact.includes('review-cta'));
 for(const target of ['dist/app.js','source/app.js']){
  const app=fs.readFileSync(target,'utf8');
