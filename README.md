@@ -17,3 +17,9 @@ Booking is a WhatsApp enquiry, followed by team confirmation. No automated reser
 ## Customer reviews
 
 See [REVIEW_SYSTEM.md](REVIEW_SYSTEM.md) for the compact name/rating/comment form, persistent private Vercel storage, protected approval dashboard, security configuration and verification. Original carousel cards and animation are retained; approved submissions join the same rotation.
+
+## Company blog articles
+
+The 25 first-party company articles live in `editorial/posts.mjs`. Each has a different illustrative image from the existing asset library and describes one service or part of the company's approach. `scripts/build-editorial.mjs` renders the posts into the existing static blog design, adds them to the blog hub and sitemap, and gives each page a canonical URL, social metadata and truthful `BlogPosting` data. It runs after the review overlay during `npm run build`; no external CMS or extra runtime dependency is needed. The articles do not claim to be customer testimonials or documented service jobs.
+
+The distribution and Google Business Profile draft schedule is in `editorial/distribution-and-monitoring.md`. Editing a post in `editorial/posts.mjs` and rerunning the build updates its static page. Keep publication dates and company facts accurate when doing so.
