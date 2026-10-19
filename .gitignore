@@ -1,0 +1,10 @@
+node_modules/
+dist/
+source/
+verification/
+PRODUCTION.md
+scripts/verify-static.mjs
+scripts/package-production.py
+.env*
+!.env.example
+.vercel/
