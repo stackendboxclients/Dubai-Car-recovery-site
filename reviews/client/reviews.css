@@ -19,3 +19,16 @@
 #share-your-experience .human-card-stars{color:#ffd04b!important;-webkit-text-fill-color:currentColor!important}
 #share-your-experience .human-review-status[data-kind=success]{color:#84e6b8!important}
 #share-your-experience .human-review-status[data-kind=error],#share-your-experience .human-field-error{color:#ff9aad!important}
+/* Compact layout requested: only the screenshot form and Submit remain. */
+.human-reviews{padding-block:24px 40px}
+.human-reviews .human-reviews-inner{max-width:980px}
+.human-reviews .human-review-actions{margin-top:18px}
+.human-reviews .human-review-status:empty{min-height:0}
+.real-review-initial{display:grid;place-items:center;color:#fff!important;background:#38202d;border:2px solid #ff3655;font-weight:700}
+#customer-reviews .real-customer-review blockquote{overflow-wrap:anywhere}
+#customer-reviews .real-review-read{background:none;border:0;color:#ffc4cf!important;-webkit-text-fill-color:currentColor!important;text-decoration:underline;font-size:12px;padding:4px 0;min-height:36px}
+.human-review-dialog{max-width:600px;width:calc(100% - 32px);max-height:80vh;overflow:auto;background:#101722;color:#fff;border:1px solid #778091;border-radius:16px;padding:24px}
+.human-review-dialog::backdrop{background:#000b}
+.human-review-dialog h2{font-size:20px;margin-bottom:18px}
+.human-review-dialog p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;margin-bottom:22px}
+.human-review-dialog button{min-height:44px;border:1px solid #ff637e;background:#a50929;color:white;border-radius:8px;padding:8px 18px;font:inherit}
