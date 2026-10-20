@@ -16,7 +16,7 @@ The two old Blob records were submitted under a manual-approval policy; inspect 
 - `GET /api/review-stats`: genuine average and count.
 - `GET /api/review-cleanup`: authenticated daily cleanup of expired rate-limit data.
 
-The browser inserts review text with `textContent`. SQL is parameterized. Reviews with URLs, email addresses or likely phone numbers are rejected with a field error to avoid publishing private information or link spam. Negative feedback and low ratings are accepted. The existing five-attempts-per-hour IP limit, two-second signed form challenge and optional server-verified Cloudflare Turnstile remain. The old admin approval endpoint and dashboard are removed.
+The browser inserts review text with `textContent`. SQL is parameterized. Reviews with URLs, email addresses or likely phone numbers are rejected with a field error to avoid publishing private information or link spam. Negative feedback and low ratings are accepted. The existing five-attempts-per-hour IP limit, two-second signed form challenge and optional server-verified Cloudflare Turnstile remain. The legacy admin endpoint returns HTTP 410 and exposes no moderation controls. The old dashboard is no longer built or linked.
 
 ## Deployment checks
 
