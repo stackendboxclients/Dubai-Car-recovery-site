@@ -22,7 +22,7 @@ export function headers(res) {
 export function send(res,status,body) { res.status(status).json(body); }
 export function handleError(res,error) {
  if(error.status===429)res.setHeader('Retry-After','3600');
- if(!(error instanceof HttpError))console.error('Reviews request failed', {type:error.name});
+ if(!(error instanceof HttpError))console.error('Reviews request failed', {type:error?.name,code:error?.code||null,category:/certificate|self.signed|unable to verify/i.test(error?.message||'')?'tls':/password authentication|authentication failed/i.test(error?.message||'')?'auth':/connect|timeout|getaddrinfo|ENOTFOUND/i.test(error?.message||'')?'connection':/customer_reviews/i.test(error?.message||'')?'schema':'other'});
  send(res,error instanceof HttpError?error.status:503,{error:error instanceof HttpError?error.message:'Reviews are temporarily unavailable. Please try again later.',...(error.errors?{errors:error.errors}:{})});
 }
 export function sameOrigin(req,cfg) {
