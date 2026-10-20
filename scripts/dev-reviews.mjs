@@ -4,10 +4,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import reviews from '../api/reviews.js';
 import config from '../api/review-config.js';
-import admin from '../api/admin-reviews.js';
 import cleanup from '../api/review-cleanup.js';
 if(!process.env.REVIEW_STORAGE_NAMESPACE?.startsWith('local-test-'))throw new Error('Local QA requires an isolated local-test- storage namespace.');
-const routes={'/api/reviews':reviews,'/api/review-config':config,'/api/admin-reviews':admin,'/api/review-cleanup':cleanup};
+const routes={'/api/reviews':reviews,'/api/review-config':config,'/api/review-cleanup':cleanup};
 const types={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'application/javascript','.json':'application/json','.webp':'image/webp','.png':'image/png','.ico':'image/x-icon','.svg':'image/svg+xml','.mp4':'video/mp4','.xml':'application/xml'};
 http.createServer(async(req,res)=>{
  try {
