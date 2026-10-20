@@ -36,3 +36,12 @@
 #customer-reviews .real-customer-review{height:auto;overflow-wrap:anywhere}
 #customer-reviews .real-customer-review blockquote{white-space:pre-wrap;overflow-wrap:anywhere}
 #customer-reviews .feedback-rating[data-has-real-reviews=true] .rating-gold-fill{animation:none!important}
+/* Manual navigation uses the existing carousel; the six-dot strip stays compact. */
+#customer-reviews .review-dots{align-items:center;gap:10px}
+#customer-reviews .review-dot-track{display:flex;align-items:center;justify-content:center;gap:6px;min-height:32px}
+#customer-reviews .review-dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:#777e89;cursor:pointer;flex:none}
+#customer-reviews .review-dot.is-active{background:#e8294e;box-shadow:0 0 0 2px #e8294e33}
+#customer-reviews .review-nav-arrow{width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#111722;color:#f5f5f7;font:28px/1 Arial,sans-serif;cursor:pointer}
+#customer-reviews .review-nav-arrow:hover{background:#a41130;border-color:#ff6f88}
+#customer-reviews .review-nav-arrow:disabled{opacity:.45;cursor:default}
+#customer-reviews .review-dots button:focus-visible{outline:2px solid #ffd04b;outline-offset:3px}

@@ -91,7 +91,7 @@
   try {
    const data=await api('/api/reviews'+(nextCursor?'?cursor='+encodeURIComponent(nextCursor):''));
    if(!Array.isArray(data.reviews))throw new Error('Reviews could not be loaded.');
-   addReviews(data.reviews);updateStats(data.stats);nextCursor=data.nextCursor;
+   addReviews(data.reviews,!hasRealReviews&&!nextCursor);updateStats(data.stats);nextCursor=data.nextCursor;
   }catch{description.textContent='Customer reviews could not be loaded right now. Please try again later.';}
   finally{loading=false;}
  }
