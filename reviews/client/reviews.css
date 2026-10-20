@@ -32,3 +32,7 @@
 .human-review-dialog h2{font-size:20px;margin-bottom:18px}
 .human-review-dialog p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;margin-bottom:22px}
 .human-review-dialog button{min-height:44px;border:1px solid #ff637e;background:#a50929;color:white;border-radius:8px;padding:8px 18px;font:inherit}
+#customer-reviews .example-review-label{display:inline-block;margin-top:9px;padding:2px 7px;border:1px solid #ffffff38;border-radius:5px;color:#c9cdd4!important;-webkit-text-fill-color:currentColor!important;font-size:10px;letter-spacing:.02em}
+#customer-reviews .real-customer-review{height:auto;overflow-wrap:anywhere}
+#customer-reviews .real-customer-review blockquote{white-space:pre-wrap;overflow-wrap:anywhere}
+#customer-reviews .feedback-rating[data-has-real-reviews=true] .rating-gold-fill{animation:none!important}
