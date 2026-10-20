@@ -1,4 +1,5 @@
 import {Pool} from 'pg';
+import {readFileSync} from 'node:fs';
 
 const idPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const publicFields=row=>({
@@ -16,7 +17,9 @@ export function reviewSql() {
  if(url!==connection){
   if(pool)void pool.end();
   connection=url;
-  pool=new Pool({connectionString:url,max:1,connectionTimeoutMillis:5000,idleTimeoutMillis:1000,ssl:{rejectUnauthorized:true}});
+  const connectionUrl=new URL(url);
+  connectionUrl.searchParams.delete('sslmode');
+  pool=new Pool({connectionString:connectionUrl.toString(),max:1,connectionTimeoutMillis:5000,idleTimeoutMillis:1000,ssl:{ca:readFileSync(new URL('./supabase-ca.crt',import.meta.url),'utf8'),rejectUnauthorized:true}});
   pool.on('error',()=>{});
   sql=async(strings,...values)=>{
    const text=strings.reduce((query,part,index)=>query+part+(index<values.length?'$'+(index+1):''),'');
