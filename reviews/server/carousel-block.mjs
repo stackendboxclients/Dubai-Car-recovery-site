@@ -31,7 +31,7 @@ if(reviewStage){
  let touchX=null;
  reviewStage.addEventListener('touchstart',event=>{touchX=event.changedTouches[0]?.screenX??null;},{passive:true});
  reviewStage.addEventListener('touchend',event=>{if(touchX===null)return;const delta=(event.changedTouches[0]?.screenX??touchX)-touchX;touchX=null;if(Math.abs(delta)<45)return;goToReview(reviewStart+(delta<0?1:-1));},{passive:true});
- document.addEventListener('customer-reviews-updated',event=>{const visible=reviewCards[reviewStart];reviewCards=[...reviewStage.querySelectorAll('.customer-review-card')];reviewStart=event.detail?.showId?Math.max(0,reviewCards.findIndex(card=>card.dataset.reviewId===event.detail.showId)):Math.max(0,reviewCards.indexOf(visible));dotWindow=-1;dotCount=-1;showReviewSet();});
+ document.addEventListener('customer-reviews-updated',event=>{const visible=reviewCards[reviewStart];reviewCards=[...reviewStage.querySelectorAll('.customer-review-card')];reviewStart=event.detail?.showId?Math.max(0,reviewCards.findIndex(card=>card.dataset.reviewId===event.detail.showId)):Math.max(0,reviewCards.indexOf(visible));if(event.detail?.showId)pauseUntil=Date.now()+8000;dotWindow=-1;dotCount=-1;showReviewSet();});
  showReviewSet();
  if(!matchMedia('(prefers-reduced-motion:reduce)').matches)reviewTimer=setInterval(nextReviewSet,2000);
 }`;
