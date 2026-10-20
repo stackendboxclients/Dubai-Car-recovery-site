@@ -5,6 +5,7 @@
  const form=section.querySelector('form'),submit=form.querySelector('[type=submit]'),status=document.getElementById('human-review-status'),stars=[...form.querySelectorAll('[name=rating]')];
  const description=document.querySelector('.reviews-heading>p:last-child');
  let settings=null,widget=null,nextCursor=null,requestId=crypto.randomUUID(),previousPayload='',loading=false,hasRealReviews=false;
+ const loadedIds=new Set();
  const message=(text,kind='')=>{status.textContent=text;status.dataset.kind=kind;};
  const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
  async function api(url,options={}) {
@@ -42,41 +43,56 @@
   if(Object.keys(errors).length){message('Please check the highlighted fields.','error');return;}
   const payload=JSON.stringify([data.name,data.rating,data.text]);if(previousPayload&&previousPayload!==payload)requestId=crypto.randomUUID();previousPayload=payload;
   submit.disabled=true;submit.textContent='Submitting…';form.setAttribute('aria-busy','true');message('Saving your review…');
+  let posted=false;
   try {
    const result=await api('/api/reviews',{method:'POST',body:JSON.stringify({...data,requestId,challenge:settings.challenge,turnstileToken:widget!==null?window.turnstile.getResponse(widget):''})});
    if(result.saved!==true)throw new Error('We could not confirm that your review was saved. Please retry.');
-   form.reset();updateStars();requestId=crypto.randomUUID();previousPayload='';message('Thank you for sharing your experience! Your review has been submitted and will appear after approval.','success');
+   if(!result.review?.id)throw new Error('We could not confirm that your review was saved. Please retry.');
+   addReviews([result.review],true);updateStats(result.stats);form.reset();updateStars();requestId=crypto.randomUUID();previousPayload='';posted=true;message('Thank you for sharing your experience! Your review is now published.','success');
   }catch(error){fieldErrors(error.fields);message(error.message||'Your review could not be saved. Please try again.','error');}
   finally {
    if(widget!==null)window.turnstile.reset(widget);submit.textContent='Submit Review ↗';form.removeAttribute('aria-busy');
-   try{await configure();}catch{settings=null;message('The review service is unavailable. Your text is still here. Please use Retry Connection.','error');showRetry();}
+   try{await configure();}catch{settings=null;if(!posted)message('The review service is unavailable. Your text is still here. Please use Retry Connection.','error');showRetry();}
   }
  });
  function showRetry(){if(form.querySelector('.human-retry'))return;const retry=el('button','btn human-retry','Retry Connection');retry.type='button';retry.addEventListener('click',async()=>{retry.disabled=true;try{await configure();message('');retry.remove();}catch(error){message(error.message,'error');retry.disabled=false;}});form.querySelector('.human-review-actions').append(retry);}
- const dialog=el('dialog','human-review-dialog');
- const dialogTitle=el('h2','','Customer review'),dialogText=el('p'),close=el('button','','Close review');close.type='button';dialogTitle.id='human-full-review-title';dialog.setAttribute('aria-labelledby',dialogTitle.id);close.addEventListener('click',()=>dialog.close());dialog.append(dialogTitle,dialogText,close);document.body.append(dialog);
+ function updateStats(stats) {
+  if(!stats||!Number.isFinite(Number(stats.count)))return;
+  const rating=document.querySelector('#customer-reviews .feedback-rating'),label=rating?.querySelector('.feedback-rating-label'),gold=rating?.querySelector('.rating-gold-fill');
+  if(!rating||!label||!gold)return;
+  if(stats.count>0){
+   const average=Math.max(0,Math.min(5,Number(stats.average)||0));
+   rating.dataset.hasRealReviews='true';rating.setAttribute('aria-label',`${average.toFixed(1)} out of 5 average from ${stats.count} customer reviews`);
+   gold.setAttribute('width',String(Math.round(average*90)));
+   label.textContent=`${average.toFixed(1)} Rating · ${stats.count} ${stats.count===1?'customer review':'customer reviews'}`;
+   description.textContent='Example cards are labelled. The rating uses genuine customer submissions only.';
+  }else{
+   rating.dataset.hasRealReviews='false';
+   description.textContent='Example reviews and illustrative rating supplied by the business. Be the first to share your experience.';
+  }
+ }
  function renderReview(review) {
-  const card=el('article','customer-review-card real-customer-review'),person=el('div','review-person'),initial=el('span','review-avatar real-review-initial',Array.from(review.customer_name)[0]?.toUpperCase()||'');initial.setAttribute('aria-hidden','true');
+  const card=el('article','customer-review-card real-customer-review'),person=el('div','review-person'),initial=el('span','review-avatar real-review-initial',Array.from(review.customer_name)[0]?.toUpperCase()||'');initial.setAttribute('aria-hidden','true');card.dataset.reviewId=review.id;
   const identity=el('div');identity.append(el('h3','',review.customer_name),el('p','','Customer review · '+new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Dubai'}).format(new Date(review.created_at))));person.append(initial,identity);
   const rating=el('div','review-stars','★'.repeat(review.rating)+'☆'.repeat(5-review.rating));rating.setAttribute('aria-label',`${review.rating} out of 5 stars`);
-  const long=review.review_text.length>230;card.append(person,rating,el('blockquote','',long?review.review_text.slice(0,230)+'…':review.review_text));
-  if(long){const read=el('button','real-review-read','Read full review');read.type='button';read.addEventListener('click',()=>{dialogTitle.textContent=review.customer_name+' · '+review.rating+'/5 stars';dialogText.textContent=review.review_text;dialog.showModal();});card.append(read);}
-  return card;
+  card.append(person,rating,el('blockquote','',review.review_text));return card;
+ }
+ function addReviews(reviews,focus=false) {
+  const fresh=reviews.filter(review=>review?.id&&!loadedIds.has(review.id));
+  if(!fresh.length)return;
+  fresh.forEach(review=>loadedIds.add(review.id));
+  if(focus){for(const review of [...fresh].reverse())stage.insertBefore(renderReview(review),stage.firstChild);}
+  else{const firstExample=stage.querySelector('.customer-review-card:not(.real-customer-review)');for(const review of fresh)stage.insertBefore(renderReview(review),firstExample);}
+  hasRealReviews=true;
+  document.dispatchEvent(new CustomEvent('customer-reviews-updated',{detail:focus?{showId:fresh[0].id}:{}}));
  }
  async function loadReviews() {
   if(loading)return;loading=true;
   try {
-   const data=await api('/api/reviews'+(nextCursor?'?cursor='+encodeURIComponent(nextCursor):''));if(!Array.isArray(data.reviews))throw new Error('Reviews could not be loaded.');
-   if(data.reviews.length) {
-    if(!hasRealReviews){hasRealReviews=true;description.textContent='Business-supplied examples and approved customer submissions. The animated 4.5 rating is illustrative.';}
-    stage.append(...data.reviews.map(renderReview));
-    document.dispatchEvent(new CustomEvent('customer-reviews-updated'));
-   }
-   nextCursor=data.nextCursor;
-   // Removed reviews can leave an empty marker page. Continue until a real
-   // review is found, without ever exposing pending or removed content.
-   if(!hasRealReviews&&nextCursor){loading=false;return loadReviews();}
-  }catch{description.textContent=hasRealReviews?'Business-supplied examples and approved submissions. The 4.5 rating is illustrative. More feedback could not be loaded right now.':'Example reviews and illustrative rating supplied by the business. Customer submissions are temporarily unavailable.';}
+   const data=await api('/api/reviews'+(nextCursor?'?cursor='+encodeURIComponent(nextCursor):''));
+   if(!Array.isArray(data.reviews))throw new Error('Reviews could not be loaded.');
+   addReviews(data.reviews);updateStats(data.stats);nextCursor=data.nextCursor;
+  }catch{description.textContent='Customer reviews could not be loaded right now. Please try again later.';}
   finally{loading=false;}
  }
  document.addEventListener('customer-reviews-advance',event=>{if(nextCursor&&event.detail.index>=event.detail.total-2)loadReviews();});

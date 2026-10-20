@@ -5,10 +5,11 @@
   "scripts": {
     "build": "node build-production.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check api/reviews.js && node --check api/review-config.js && node --check api/admin-reviews.js && node --check reviews/client/reviews.js && node --check reviews/server/core.mjs && node --check editorial/posts.mjs && node --check scripts/build-editorial.mjs"
+    "check": "node --check api/reviews.js && node --check api/review-config.js && node --check api/admin-reviews.js && node --check api/review-stats.js && node --check reviews/client/reviews.js && node --check reviews/server/core.mjs && node --check reviews/server/database.mjs && node --check editorial/posts.mjs && node --check scripts/build-editorial.mjs"
   },
   "type": "module",
   "dependencies": {
-    "@vercel/blob": "^2.8.2"
+    "@vercel/blob": "^2.8.2",
+    "pg": "^8.23.1"
   }
 }
