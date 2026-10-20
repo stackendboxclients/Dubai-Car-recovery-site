@@ -63,3 +63,5 @@ execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/build-editorial.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/fix-homepage-audit.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/align-service-area.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
