@@ -4,7 +4,7 @@ The compact Write a Review form sits below the original Customer Feedback carous
 
 ## Storage
 
-Use a Neon-managed PostgreSQL database connected to the existing Vercel project. This feature does not use Supabase. Apply `reviews/migrations/001_customer_reviews.sql` once to the database before deployment. Set `DATABASE_URL` server-side in Production and Preview. `POSTGRES_URL` is an accepted fallback if supplied by the provider. Never place either URL in browser code or Git. The existing private Vercel Blob store remains the shared persistent rate-limit store, and requires `BLOB_READ_WRITE_TOKEN`. The database holds the customer reviews and survives deployments.
+Use the existing Supabase PostgreSQL database connected to the Vercel project. Apply `reviews/migrations/001_customer_reviews.sql` once to the database before deployment. Vercel injects `POSTGRES_URL` into Production and Preview; `DATABASE_URL` is accepted as a local fallback. The Node.js API uses the pooled PostgreSQL connection with parameterized queries and a one-connection pool. Never place either URL in browser code or Git. Row level security is enabled without public policies, so the Supabase public API cannot read or write reviews directly. The existing private Vercel Blob store remains the shared persistent rate-limit store, and requires `BLOB_READ_WRITE_TOKEN`. The database holds the customer reviews and survives deployments.
 
 The two old Blob records were submitted under a manual-approval policy; inspect them individually before deciding whether to import them. The migration intentionally does not silently publish pending or test records.
 
@@ -20,4 +20,4 @@ The browser inserts review text with `textContent`. SQL is parameterized. Review
 
 ## Deployment checks
 
-Run `npm ci`, `npm run check`, `npm run build`, `npm test`, and `npm audit --omit=dev`. Confirm `DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, `REVIEW_SIGNING_SECRET` and (for cron) `CRON_SECRET` exist in Vercel. Apply the SQL migration. Verify a genuine, clearly test-labelled review via a controlled production submission only when the owner is ready to leave a public test review; then verify GET and independent browser visibility. Do not claim production persistence merely from unit tests.
+Run `npm ci`, `npm run check`, `npm run build`, `npm test`, and `npm audit --omit=dev`. Confirm `POSTGRES_URL`, `BLOB_READ_WRITE_TOKEN`, `REVIEW_SIGNING_SECRET` and (for cron) `CRON_SECRET` exist in Vercel. Apply the SQL migration. Verify a genuine, clearly test-labelled review via a controlled production submission only when the owner is ready to leave a public test review; then verify GET and independent browser visibility. Do not claim production persistence merely from unit tests.
