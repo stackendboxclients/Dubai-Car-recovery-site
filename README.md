@@ -16,7 +16,7 @@ Booking is a WhatsApp enquiry, followed by team confirmation. No automated reser
 
 ## Customer reviews
 
-See [REVIEW_SYSTEM.md](REVIEW_SYSTEM.md) for the compact name/rating/comment form, persistent private Vercel storage, protected approval dashboard, security configuration and verification. Original carousel cards and animation are retained; approved submissions join the same rotation.
+See [REVIEW_SYSTEM.md](REVIEW_SYSTEM.md) for the compact name/rating/comment form, persistent PostgreSQL storage, automatic publication, security configuration and verification. Original example cards and animation are retained; genuine submissions join the same rotation.
 
 ## Company blog articles
 
