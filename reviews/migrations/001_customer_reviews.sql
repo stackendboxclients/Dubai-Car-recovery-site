@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS customer_reviews (
 CREATE INDEX IF NOT EXISTS customer_reviews_public_newest
   ON customer_reviews (created_at DESC, id DESC)
   WHERE status = 'published' AND source = 'customer_submission';
+ALTER TABLE customer_reviews ENABLE ROW LEVEL SECURITY;
