@@ -1,4 +1,4 @@
-import {neon} from '@neondatabase/serverless';
+import {Pool} from 'pg';
 
 const idPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const publicFields=row=>({
@@ -8,12 +8,22 @@ const publicFields=row=>({
  review_text:row.review_text,
  created_at:new Date(row.created_at).toISOString()
 });
-let connection,sql;
+let connection,pool,sql;
 
 export function reviewSql() {
- const url=process.env.DATABASE_URL||process.env.POSTGRES_URL;
+ const url=process.env.POSTGRES_URL||process.env.DATABASE_URL;
  if(!url||!/^postgres(?:ql)?:\/\//.test(url))throw new Error('Review database is not configured');
- if(url!==connection){connection=url;sql=neon(url);}
+ if(url!==connection){
+  if(pool)void pool.end();
+  connection=url;
+  pool=new Pool({connectionString:url,max:1,connectionTimeoutMillis:5000,idleTimeoutMillis:1000,ssl:{rejectUnauthorized:true}});
+  pool.on('error',()=>{});
+  sql=async(strings,...values)=>{
+   const text=strings.reduce((query,part,index)=>query+part+(index<values.length?'$'+(index+1):''),'');
+   const result=await pool.query(text,values);
+   return result.rows;
+  };
+ }
  return sql;
 }
 
