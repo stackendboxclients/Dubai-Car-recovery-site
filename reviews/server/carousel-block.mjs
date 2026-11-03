@@ -22,6 +22,7 @@ if(reviewStage){
    const active=windowStart+offset===reviewStart;dot.classList.toggle('is-active',active);
    if(active)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current');
   }
+  controls.hidden=reviewCards.length<2;
   previous.disabled=next.disabled=reviewCards.length<2;
  };
  const goToReview=index=>{if(!reviewCards.length)return;reviewStart=(index+reviewCards.length)%reviewCards.length;pauseUntil=Date.now()+8000;showReviewSet();announce();};

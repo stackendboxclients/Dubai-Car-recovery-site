@@ -13,7 +13,18 @@ const baseline=fs.readFileSync('dist/index.html','utf8');
 const original=baseline.match(/<section class="section reviews-section"[\s\S]*?<\/section>/)?.[0];
 assert(original,'Existing animated review section must exist.');
 assert(!baseline.includes('id="share-your-experience"'),'Feature already injected: run the full build first.');
-const compact=original.replace(/<a class="btn whatsapp review-cta"[\s\S]*?<\/a>/,'').replace('aria-label="4.5 out of 5 rating"','aria-label="Illustrative 4.5 rating for example reviews"').replace('role="img" aria-label="Four full gold stars and one half gold star"','aria-hidden="true"').replace('Reviews supplied by the business for publication. Dates are shown exactly as provided.','Example reviews and illustrative rating supplied by the business. Customer submissions publish automatically.').replace(/(<article class="customer-review-card[^"]*"[\s\S]*?<\/blockquote>)/g,'$1<span class="example-review-label">Example review</span>');
+const compact=original
+ .replace(/<a class="btn whatsapp review-cta"[\s\S]*?<\/a>/,'')
+ .replace(/<article class="customer-review-card[^"]*"[\s\S]*?<\/article>/g,'')
+ .replace('data-review-count="6"','data-review-count="0"')
+ .replace('class="feedback-rating"','class="feedback-rating" hidden')
+ .replace('aria-label="4.5 out of 5 rating"','aria-label="No customer rating yet"')
+ .replace('role="img" aria-label="Four full gold stars and one half gold star"','aria-hidden="true"')
+ .replace('width="408"','width="0"')
+ .replace('4.5 Rating','No customer rating yet')
+ .replace('Reviews supplied by the business for publication. Dates are shown exactly as provided.','Read customer submissions or share your own experience.')
+ .replace(/(<div class="customer-review-stage"[^>]*>)/,'$1<p class="customer-review-empty">Be the first to share your experience.</p>')
+ .replace(/(<div class="review-dots"[^>]*>)[\s\S]*?(<\/div>)/,'$1$2');
 assert(compact.includes('customer-review-stage')&&!compact.includes('review-cta'));
 for(const target of ['dist/app.js','source/app.js']){
  const app=fs.readFileSync(target,'utf8');

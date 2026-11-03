@@ -62,13 +62,13 @@
   if(!rating||!label||!gold)return;
   if(stats.count>0){
    const average=Math.max(0,Math.min(5,Number(stats.average)||0));
-   rating.dataset.hasRealReviews='true';rating.setAttribute('aria-label',`${average.toFixed(1)} out of 5 average from ${stats.count} customer reviews`);
+   rating.hidden=false;rating.dataset.hasRealReviews='true';rating.setAttribute('aria-label',`${average.toFixed(1)} out of 5 average from ${stats.count} customer reviews`);
    gold.setAttribute('width',String(Math.round(average*90)));
    label.textContent=`${average.toFixed(1)} Rating · ${stats.count} ${stats.count===1?'customer review':'customer reviews'}`;
-   description.textContent='Example cards are labelled. The rating uses genuine customer submissions only.';
+   description.textContent='The rating uses customer submissions only.';
   }else{
-   rating.dataset.hasRealReviews='false';
-   description.textContent='Example reviews and illustrative rating supplied by the business. Be the first to share your experience.';
+   rating.hidden=true;rating.dataset.hasRealReviews='false';
+   description.textContent='Be the first to share your experience.';
   }
  }
  function renderReview(review) {
@@ -80,6 +80,7 @@
  function addReviews(reviews,focus=false) {
   const fresh=reviews.filter(review=>review?.id&&!loadedIds.has(review.id));
   if(!fresh.length)return;
+  stage.querySelector('.customer-review-empty')?.remove();
   fresh.forEach(review=>loadedIds.add(review.id));
   if(focus){for(const review of [...fresh].reverse())stage.insertBefore(renderReview(review),stage.firstChild);}
   else{const firstExample=stage.querySelector('.customer-review-card:not(.real-customer-review)');for(const review of fresh)stage.insertBefore(renderReview(review),firstExample);}

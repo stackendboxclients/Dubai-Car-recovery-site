@@ -45,3 +45,5 @@
 #customer-reviews .review-nav-arrow:hover{background:#a41130;border-color:#ff6f88}
 #customer-reviews .review-nav-arrow:disabled{opacity:.45;cursor:default}
 #customer-reviews .review-dots button:focus-visible{outline:2px solid #ffd04b;outline-offset:3px}
+/* An unrated empty state must not be overridden by carousel display styles. */
+.feedback-rating[hidden],.review-dots[hidden]{display:none!important}
