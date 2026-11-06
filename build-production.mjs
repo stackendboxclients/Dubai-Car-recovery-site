@@ -68,3 +68,4 @@ execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 
 execFileSync(process.execPath,['scripts/correct-approved-claims.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/inject-gtm.mjs'],{stdio:'inherit'});
