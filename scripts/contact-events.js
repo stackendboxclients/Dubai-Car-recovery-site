@@ -21,6 +21,7 @@
   const canMeasure = () => attributed && choice === 'allow' && !privacySignal;
   const measurementId = 'G-LD89L3NJHQ';
   const publicHome = 'https://www.dubaicarrecovery.site/';
+  const handoffTimeout = 650;
   let tagLoaded = false;
   let bookingRecorded = false;
   let lastEvent;
@@ -75,7 +76,7 @@
         completed = true;
         callback();
       };
-      setTimeout(finish, 350);
+      setTimeout(finish, handoffTimeout);
       afterSend = finish;
     }
     gtag('event', event, {
@@ -86,7 +87,7 @@
       page_referrer: publicHome,
       page_title: 'Dubai Car Recovery',
       ...(window.dcrPreviewContactTest && { debug_mode: true }),
-      ...(afterSend && { event_callback: afterSend, event_timeout: 350 }),
+      ...(afterSend && { event_callback: afterSend, event_timeout: handoffTimeout }),
     });
     return true;
   }
@@ -114,12 +115,16 @@
       choice = selected;
       window[`ga-disable-${measurementId}`] = choice !== 'allow';
       persistChoice();
+      loadTag();
       panel.replaceChildren(document.createTextNode(choice === 'allow' ? 'Analytics allowed for this tab.' : 'Analytics declined for this tab.'));
     });
     document.querySelector('main')?.prepend(panel);
   }
 
-  if (canMeasure()) persistChoice();
+  if (canMeasure()) {
+    persistChoice();
+    loadTag();
+  }
   document.addEventListener('DOMContentLoaded', renderChoices, { once: true });
   if (!attributed) return;
 
