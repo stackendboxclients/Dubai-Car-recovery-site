@@ -7,10 +7,10 @@ import zlib from 'node:zlib';
 import { createHash } from 'node:crypto';
 
 const ID = 'GTM-PK92F5J6';
-const HEAD = `<!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${ID}');</script><!-- End Google Tag Manager -->`;
+const HEAD = `<!-- Google Tag Manager --><script>(function(w,d,s,l,i){const campaign=new URLSearchParams(location.search).get('dcr_campaign');if(campaign==='24440969896')return;try{if(campaign===null&&sessionStorage.getItem('dcr_ads_campaign')==='24440969896')return;}catch{}w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${ID}');</script><!-- End Google Tag Manager -->`;
 const BODY = `<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!-- End Google Tag Manager (noscript) -->`;
 const CONTACT_EVENTS = fs.readFileSync(new URL('./contact-events.js', import.meta.url), 'utf8');
-const PREVIEW_TEST = process.env.VERCEL_ENV === 'preview' ? `<script>try { if (new URLSearchParams(location.search).get('dcr_test') === '1') sessionStorage.setItem('dcr_preview_contact_test', '1'); window.dcrPreviewContactTest = sessionStorage.getItem('dcr_preview_contact_test') === '1'; } catch {}</script>` : '';
+const PREVIEW_TEST = process.env.VERCEL_ENV === 'preview' ? `<script>${fs.readFileSync(new URL('./contact-events-preview.js', import.meta.url), 'utf8')}</script>` : '';
 const BOOKING_HANDOFF = ' location.assign(url);';
 const BOOKING_EVENT = " if (document.dispatchEvent(new CustomEvent('dcr:booking-whatsapp-open', {cancelable: true, detail: {continueHandoff: () => location.assign(url)}}))) location.assign(url);";
 

@@ -19,12 +19,44 @@
   const privacySignal = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
   if (privacySignal) choice = 'deny';
   const canMeasure = () => attributed && choice === 'allow' && !privacySignal;
+  const measurementId = 'G-LD89L3NJHQ';
+  const publicHome = 'https://www.dubaicarrecovery.site/';
+  let tagLoaded = false;
   let bookingRecorded = false;
   let lastEvent;
   let lastEventAt = 0;
 
+  function gtag() {
+    (window.dataLayer ||= []).push(arguments);
+  }
+
+  function loadTag() {
+    if (tagLoaded || !canMeasure()) return;
+    tagLoaded = true;
+    gtag('consent', 'default', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    });
+    gtag('js', new Date());
+    gtag('config', measurementId, {
+      send_page_view: false,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+      page_location: publicHome,
+      page_referrer: publicHome,
+      page_title: 'Dubai Car Recovery',
+    });
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.append(script);
+  }
+
   function record(event, contactSurface, afterSend) {
     if (!canMeasure()) return false;
+    loadTag();
     const now = Date.now();
     if (event === lastEvent && now - lastEventAt < 800) return false;
     lastEvent = event;
@@ -40,11 +72,15 @@
       setTimeout(finish, 350);
       afterSend = finish;
     }
-    (window.dataLayer ||= []).push({
-      event,
+    gtag('event', event, {
+      send_to: measurementId,
       dcr_campaign_id: campaignId,
       dcr_contact_surface: contactSurface,
-      ...(afterSend && { eventCallback: afterSend, eventTimeout: 350 }),
+      page_location: publicHome,
+      page_referrer: publicHome,
+      page_title: 'Dubai Car Recovery',
+      ...(window.dcrPreviewContactTest && { debug_mode: true }),
+      ...(afterSend && { event_callback: afterSend, event_timeout: 350 }),
     });
     return true;
   }
@@ -70,14 +106,18 @@
       const selected = event.target.closest('[data-dcr-choice]')?.dataset.dcrChoice;
       if (!selected) return;
       choice = selected;
-      window['ga-disable-G-LD89L3NJHQ'] = choice !== 'allow';
+      window[`ga-disable-${measurementId}`] = choice !== 'allow';
       persistChoice();
+      loadTag();
       panel.replaceChildren(document.createTextNode(choice === 'allow' ? 'Analytics allowed for this tab.' : 'Analytics declined for this tab.'));
     });
     document.querySelector('main')?.prepend(panel);
   }
 
-  if (canMeasure()) persistChoice();
+  if (canMeasure()) {
+    persistChoice();
+    loadTag();
+  }
   document.addEventListener('DOMContentLoaded', renderChoices, { once: true });
   if (!attributed) return;
 
