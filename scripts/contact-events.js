@@ -39,6 +39,12 @@
       ad_user_data: 'denied',
       ad_personalization: 'denied',
     });
+    gtag('set', {
+      send_page_view: false,
+      page_location: publicHome,
+      page_referrer: publicHome,
+      page_title: 'Dubai Car Recovery',
+    });
     gtag('js', new Date());
     gtag('config', measurementId, {
       send_page_view: false,
@@ -108,16 +114,12 @@
       choice = selected;
       window[`ga-disable-${measurementId}`] = choice !== 'allow';
       persistChoice();
-      loadTag();
       panel.replaceChildren(document.createTextNode(choice === 'allow' ? 'Analytics allowed for this tab.' : 'Analytics declined for this tab.'));
     });
     document.querySelector('main')?.prepend(panel);
   }
 
-  if (canMeasure()) {
-    persistChoice();
-    loadTag();
-  }
+  if (canMeasure()) persistChoice();
   document.addEventListener('DOMContentLoaded', renderChoices, { once: true });
   if (!attributed) return;
 

@@ -18,6 +18,8 @@
         event: query.get('en'),
         destination: query.get('tid'),
         campaign: query.get('ep.dcr_campaign_id') || query.get('epn.dcr_campaign_id'),
+        safePage: query.get('dl') === 'https://www.dubaicarrecovery.site/',
+        containsClickIdentifier: ['gclid', 'dclid', 'wbraid', 'gbraid'].some((key) => query.has(key)),
         status: entry.responseStatus || null,
       }));
     }
