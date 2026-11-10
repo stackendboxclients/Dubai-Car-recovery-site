@@ -4,10 +4,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { createHash } from 'node:crypto';
 
 const ID = 'GTM-PK92F5J6';
 const HEAD = `<!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${ID}');</script><!-- End Google Tag Manager -->`;
 const BODY = `<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!-- End Google Tag Manager (noscript) -->`;
+const CONTACT_EVENTS = fs.readFileSync(new URL('./contact-events.js', import.meta.url), 'utf8');
+const BOOKING_HANDOFF = ' location.assign(url);';
+const BOOKING_EVENT = " document.dispatchEvent(new Event('dcr:booking-whatsapp-open'));";
+
+const appPath = path.join('dist', 'app.js');
+const app = fs.readFileSync(appPath, 'utf8');
+if (!app.includes(BOOKING_HANDOFF)) throw new Error('Booking WhatsApp handoff not found');
+const measuredApp = app.includes(BOOKING_EVENT) ? app : app.replace(BOOKING_HANDOFF, `${BOOKING_EVENT}\n${BOOKING_HANDOFF}`);
+const appVersion = createHash('sha256').update(measuredApp).digest('hex').slice(0, 12);
+if (measuredApp !== app) {
+  fs.writeFileSync(appPath, measuredApp);
+  fs.writeFileSync(`${appPath}.gz`, zlib.gzipSync(measuredApp));
+}
 
 let changed = 0;
 let total = 0;
@@ -21,7 +35,8 @@ function walk(dir) {
     if (html.includes(ID)) continue;
     if (!/<head[^>]*>/i.test(html) || !/<body[^>]*>/i.test(html)) continue;
     const updated = html
-      .replace(/<head([^>]*)>/i, (m) => `${m}${HEAD}`)
+      .replace(/<head([^>]*)>/i, (m) => `${m}${HEAD}<script>${CONTACT_EVENTS}</script>`)
+      .replace(/src="\/app\.js\?v=[^"]+"/g, `src="/app.js?v=${appVersion}"`)
       .replace(/<body([^>]*)>/i, (m) => `${m}${BODY}`);
     fs.writeFileSync(file, updated);
     if (fs.existsSync(file + '.gz')) fs.writeFileSync(file + '.gz', zlib.gzipSync(updated));
