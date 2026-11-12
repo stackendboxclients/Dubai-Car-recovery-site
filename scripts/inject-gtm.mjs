@@ -7,9 +7,11 @@ import zlib from 'node:zlib';
 import { createHash } from 'node:crypto';
 
 const ID = 'GTM-PK92F5J6';
-const HEAD = `<!-- Google Tag Manager --><script>(function(w,d,s,l,i){const campaign=new URLSearchParams(location.search).get('dcr_campaign');if(campaign==='24440969896')return;try{if(campaign===null&&sessionStorage.getItem('dcr_ads_campaign')==='24440969896')return;}catch{}w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${ID}');</script><!-- End Google Tag Manager -->`;
+const CONTACT_CAMPAIGNS = JSON.stringify(['24440969896', '24460132745']);
+const HEAD = `<!-- Google Tag Manager --><script>(function(w,d,s,l,i){const campaigns=${CONTACT_CAMPAIGNS};const campaign=new URLSearchParams(location.search).get('dcr_campaign');if(campaigns.includes(campaign))return;try{if(campaign===null&&campaigns.includes(sessionStorage.getItem('dcr_ads_campaign')))return;}catch{}w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${ID}');</script><!-- End Google Tag Manager -->`;
 const BODY = `<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!-- End Google Tag Manager (noscript) -->`;
-const CONTACT_EVENTS = fs.readFileSync(new URL('./contact-events.js', import.meta.url), 'utf8');
+const CONTACT_EVENTS = fs.readFileSync(new URL('./contact-events.js', import.meta.url), 'utf8')
+  .replace('__DCR_CONTACT_CAMPAIGN_IDS__', CONTACT_CAMPAIGNS);
 const PREVIEW_TEST = process.env.VERCEL_ENV === 'preview' ? `<script>${fs.readFileSync(new URL('./contact-events-preview.js', import.meta.url), 'utf8')}</script>` : '';
 const BOOKING_HANDOFF = ' location.assign(url);';
 const BOOKING_EVENT = " if (document.dispatchEvent(new CustomEvent('dcr:booking-whatsapp-open', {cancelable: true, detail: {continueHandoff: () => location.assign(url)}}))) location.assign(url);";
@@ -42,7 +44,7 @@ function walk(dir) {
     if (file === path.join('dist', 'privacy', 'index.html')) {
       const oldNotice = 'This implementation has no analytics, advertising scripts, tracking cookies or public enquiry database.';
       if (!updated.includes(oldNotice)) throw new Error('Contact analytics privacy disclosure location not found');
-      updated = updated.replace(oldNotice, 'If you allow optional contact analytics, Google Analytics counts Call taps, WhatsApp opens and booking-form handoffs from our tagged November advertising campaign. Google Analytics may use first-party cookies to distinguish visits. We do not send form details, contact numbers or WhatsApp messages to analytics. Your choice applies to this browser tab and can be changed on this page. Declining does not affect contact or booking features.');
+      updated = updated.replace(oldNotice, 'If you allow optional contact analytics, Google Analytics counts Call taps, WhatsApp opens and booking-form handoffs from our tagged advertising campaigns. Google Analytics may use first-party cookies to distinguish visits. We do not send form details, contact numbers or WhatsApp messages to analytics. Your choice applies to this browser tab and can be changed on this page. Declining does not affect contact or booking features.');
     }
     fs.writeFileSync(file, updated);
     if (fs.existsSync(file + '.gz')) fs.writeFileSync(file + '.gz', zlib.gzipSync(updated));

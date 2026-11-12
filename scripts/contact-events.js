@@ -1,24 +1,25 @@
-(() => {
+((campaignIds) => {
   'use strict';
 
-  const campaignId = '24440969896';
   const storageKey = 'dcr_ads_campaign';
   const consentKey = 'dcr_contact_analytics_choice';
   const campaignParameter = new URLSearchParams(location.search).get('dcr_campaign');
-  let attributed = campaignParameter === campaignId;
+  let campaignId = campaignIds.includes(campaignParameter) ? campaignParameter : null;
   let choice;
 
   try {
     choice = sessionStorage.getItem(consentKey);
-    if (campaignParameter === null) attributed = sessionStorage.getItem(storageKey) === campaignId;
-    else if (!attributed) sessionStorage.removeItem(storageKey);
+    if (campaignParameter === null) {
+      const storedCampaign = sessionStorage.getItem(storageKey);
+      if (campaignIds.includes(storedCampaign)) campaignId = storedCampaign;
+    } else if (!campaignId) sessionStorage.removeItem(storageKey);
   } catch {
     // A choice can still be made for the current page.
   }
 
   const privacySignal = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
   if (privacySignal) choice = 'deny';
-  const canMeasure = () => attributed && choice === 'allow' && !privacySignal;
+  const canMeasure = () => Boolean(campaignId) && choice === 'allow' && !privacySignal;
   const measurementId = 'G-LD89L3NJHQ';
   const publicHome = 'https://www.dubaicarrecovery.site/';
   const handoffTimeout = 650;
@@ -104,7 +105,7 @@
 
   function renderChoices() {
     const isPrivacyPage = location.pathname === '/privacy/';
-    if ((!attributed && !isPrivacyPage) || (!isPrivacyPage && choice) || privacySignal) return;
+    if ((!campaignId && !isPrivacyPage) || (!isPrivacyPage && choice) || privacySignal) return;
     const panel = document.createElement('aside');
     panel.className = 'wrap';
     panel.setAttribute('aria-label', 'Optional contact analytics');
@@ -126,7 +127,7 @@
     loadTag();
   }
   document.addEventListener('DOMContentLoaded', renderChoices, { once: true });
-  if (!attributed) return;
+  if (!campaignId) return;
 
   document.addEventListener('click', (event) => {
     const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null;
@@ -154,4 +155,4 @@
     bookingRecorded ||= recorded;
     if (recorded && continueHandoff) event.preventDefault();
   });
-})();
+})(__DCR_CONTACT_CAMPAIGN_IDS__);
