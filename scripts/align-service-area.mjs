@@ -62,5 +62,5 @@ function walk(dir) {
   }
 }
 walk('dist');
-if (changed !== 68) throw new Error(`Expected to align 68 public pages; updated ${changed}`);
+if (changed !== 67) throw new Error(`Expected to align 67 public pages; updated ${changed}`);
 console.log(`Registered address and Dubai service-area wording aligned across ${changed} pages.`);

@@ -5,6 +5,11 @@
   "outputDirectory": "dist",
   "installCommand": "npm ci --omit=dev",
   "trailingSlash": true,
+  "redirects": [
+    { "source": "/services/fuel-delivery/", "destination": "/services/roadside-assistance/", "permanent": true },
+    { "source": "/blogs/service-fuel-delivery-dubai/", "destination": "/services/roadside-assistance/", "permanent": true },
+    { "source": "/blogs/emergency-fuel-assistance-dubai-clear-service/", "destination": "/services/roadside-assistance/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/media/:path*",

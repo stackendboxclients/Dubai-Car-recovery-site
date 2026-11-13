@@ -10,6 +10,9 @@ for(const post of editorialPosts){
  if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug))throw new Error('Unsafe editorial slug');
  fs.rmSync(path.join('dist','blogs',post.slug),{recursive:true,force:true});
 }
+const retiredEditorialPage = path.join('dist', 'blogs', 'emergency-fuel-assistance-dubai-clear-service');
+for (const name of ['index.html', 'index.html.gz']) fs.rmSync(path.join(retiredEditorialPage, name), {force: true});
+if (fs.existsSync(retiredEditorialPage)) fs.rmdirSync(retiredEditorialPage);
 function extractArchive(file,expectedHash){
 const archive=fs.readFileSync(file);
 if(crypto.createHash('sha256').update(archive).digest('hex')!==expectedHash)throw new Error(`${file} checksum mismatch`);
@@ -67,5 +70,6 @@ execFileSync(process.execPath,['scripts/align-service-area.mjs'],{stdio:'inherit
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 
 execFileSync(process.execPath,['scripts/correct-approved-claims.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/retire-fuel-service.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/inject-gtm.mjs'],{stdio:'inherit'});

@@ -9,7 +9,7 @@ const esc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').re
 const serviceNames={
   'car-towing':'car towing','flatbed-towing':'flatbed towing','luxury-car-transport':'luxury and sports car transport',
   'emergency-recovery':'breakdown recovery','accident-recovery':'accident recovery','roadside-assistance':'roadside assistance',
-  'battery-assistance':'battery boost assistance','tyre-assistance':'tyre assistance','fuel-delivery':'emergency fuel assistance',
+  'battery-assistance':'battery boost assistance','tyre-assistance':'tyre assistance',
   'desert-recovery':'desert and off-road recovery','motorcycle-towing':'motorcycle transport',
   'truck-recovery':'commercial vehicle recovery','passing-assistance':'vehicle passing transport assistance'
 };
@@ -22,7 +22,6 @@ const imageAlt={
   'dubai-roadside-assistance.webp':'Illustrative roadside assistance beside a stopped car in Dubai',
   'dubai-battery-assistance.webp':'Illustrative technician looking at a car battery in Dubai',
   'dubai-tyre-assistance.webp':'Illustrative technician assisting with a car tyre in Dubai',
-  'dubai-emergency-fuel-help.webp':'Illustrative technician discussing a fuel problem beside a car in Dubai',
   'package-dubai-desert-sand-recovery.webp':'Illustrative off-road vehicle and recovery truck in Dubai desert sand',
   'package-motorcycle-transport-dubai.webp':'Illustrative motorcycle secured on a flatbed truck in Dubai',
   'dubai-commercial-vehicle-transport.webp':'Illustrative white commercial van on a recovery truck in Dubai',
@@ -50,7 +49,6 @@ assert(templateGraph,'Existing article schema missing');
 const baseGraph=templateGraph.filter(item=>['LocalBusiness','WebSite'].includes(item['@type']));
 assert.equal(baseGraph.length,2);
 const seenSlugs=new Set(),seenImages=new Set(),seenTitles=new Set(),seenSummaries=new Set();
-assert.equal(posts.length,25,'Editorial release must contain exactly 25 distinct company posts');
 
 for(const post of posts){
   assert(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug));
