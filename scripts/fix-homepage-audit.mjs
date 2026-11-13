@@ -16,6 +16,13 @@ const appPath = path.join(dist, 'app.js');
 let app = fs.readFileSync(appPath, 'utf8');
 assert(app.includes("link.removeAttribute('href')"), 'Expected enquiry reset code');
 app = app.replace("link.removeAttribute('href')", `link.href='${whatsapp}'`);
+
+// Keep the sticky Call button available until the hero Call button itself is fully in view.
+const heroSelector = "const heroActions=document.querySelector('.hero-actions');";
+const heroObserver = "heroActionsVisible=entries[0].isIntersecting;updateSticky();},{threshold:0}).observe(heroActions)";
+assert(app.includes(heroSelector) && app.includes(heroObserver), 'Expected sticky contact visibility code');
+app = app.replace(heroSelector, "const heroActions=document.querySelector('.hero-actions a[href^=\"tel:\"]');");
+app = app.replace(heroObserver, "heroActionsVisible=entries[0].intersectionRatio>=.99;updateSticky();},{threshold:.99}).observe(heroActions)");
 fs.writeFileSync(appPath, app);
 fs.writeFileSync(`${appPath}.gz`, zlib.gzipSync(app, {level: 9}));
 const appVersion = crypto.createHash('sha256').update(app).digest('hex').slice(0, 12);
