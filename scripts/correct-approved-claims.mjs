@@ -5,6 +5,27 @@ import assert from 'node:assert/strict';
 
 // Approved copy corrections only; keep contact links, layout, services and SEO tags.
 const neutral='Need vehicle towing or recovery in Dubai? Call with your vehicle details, pickup location and destination to confirm service availability and a quote.';
+const roadsideScope='If a flat tyre or mechanical fault makes your vehicle unsafe to drive, call to arrange towing to your chosen garage. We provide vehicle transport. For on-site repairs, contact a repair provider.';
+const additionalOffers=['Battery boost assistance','Tyre assistance','Commercial vehicle recovery','Vehicle passing transport assistance'];
+const additionalOfferPaths=['/services/battery-assistance/','/services/tyre-assistance/','/services/truck-recovery/','/services/passing-assistance/'];
+
+function limitHomepageOffers(html) {
+ for(const offer of additionalOffers){
+  html=html.replaceAll(`<span class="hero-service-chip codepen-service"><span class="hero-service-label">${offer}</span></span>`,'');
+  html=html.replaceAll(`<option value="${offer}">${offer}</option>`,'');
+  html=html.replace(new RegExp(`<div class="card card-[^"]+"[^>]*><button class="img" type="button" aria-label="Read about ${offer}">[^]*?</button></div>`,'g'),'');
+ }
+ return html.replace(/<script type="application\/ld\+json">([^<]+)<\/script>/g,(original,json)=>{
+  if(!additionalOfferPaths.some(route=>json.includes(route)))return original;
+  const data=JSON.parse(json);
+  const removeOffers=value=>{
+   if(Array.isArray(value))return value.filter(item=>!additionalOffers.includes(item?.itemOffered?.name)&&!additionalOfferPaths.some(route=>item?.itemOffered?.url?.endsWith(route))).map(removeOffers);
+   if(value&&typeof value==='object')for(const [key,item] of Object.entries(value))value[key]=removeOffers(item);
+   return value;
+  };
+  return '<script type="application/ld+json">'+JSON.stringify(removeOffers(data)).replaceAll('<','\\u003c')+'</script>';
+ });
+}
 const replacements=new Map([
  ['Car Recovery Dubai | 24/7 Car &amp; Bike Towing','Car Recovery Dubai | Car &amp; Bike Towing'],
  ['Car Recovery Dubai | 24/7 Car & Bike Towing','Car Recovery Dubai | Car & Bike Towing'],
@@ -31,6 +52,9 @@ function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
  html=html.replaceAll('24/7 assistance, subject to availability and location','24/7 telephone enquiries; service availability confirmed individually');
  if(file===path.join('dist','index.html')){
   for(const [from,to] of replacements)html=html.replaceAll(from,to);
+  html=limitHomepageOffers(html)
+   .replace('Collection and transport to your chosen garage, home or destination.','Vehicle collection for drivers, garages and workshops. Call to arrange towing to your chosen destination.')
+   .replace('Describe the problem so we can discuss assistance or vehicle transport.',roadsideScope);
   html=html.replace(/<div class="transport-caption"><h3>([\s\S]*?)<\/h3><p>[\s\S]*?<\/p><\/div>/g,(_,title)=>{
    const heading=title.replace('Safe &amp; Secure Vehicle Towing','Vehicle Towing').replace('Professional Vehicle Recovery','Vehicle Recovery').replace('Careful Loading &amp; Handling','Loading Requirements').replace('Secure Flatbed Transport','Flatbed Transport').replace('Secure Motorcycle Transport','Motorcycle Transport');
    return `<div class="transport-caption"><h3>${heading}</h3><p>Illustrative image. Discuss vehicle requirements and availability before booking.</p></div>`;
@@ -39,6 +63,8 @@ function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
   assert(html.includes(neutral));
   assert(html.includes('href="tel:+971501263137"')&&html.includes('href="https://wa.me/971501263137"'));
   assert(html.includes('id="share-your-experience"')&&html.includes('customer-review-stage'));
+  assert(html.includes('Vehicle collection for drivers, garages and workshops.')&&html.includes(roadsideScope));
+  assert(!additionalOffers.some(offer=>html.includes(offer)),'An offer outside the campaign scope remains on the ad destination');
  }
  if(html!==original){fs.writeFileSync(file,html);fs.writeFileSync(file+'.gz',zlib.gzipSync(html,{level:9}));changed++;}
 }}
