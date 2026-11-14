@@ -72,5 +72,6 @@ execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/correct-approved-claims.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/retire-fuel-service.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/improve-homepage-call-path.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/defer-header-motion.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/verify-static.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/inject-gtm.mjs'],{stdio:'inherit'});
